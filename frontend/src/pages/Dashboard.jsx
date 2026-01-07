@@ -1,58 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { fetchDashboardMessage, logout } from "../features/auth/authSlice";
 
 function Dashboard() {
-  const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Fetch dashboard data on page load
-  const fetchDashboard = async () => {
-    const token = localStorage.getItem("token");
+  // Get Redux auth state
+  const { token, message, loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
-    if (!token) {
-      navigate("/login"); // no token → go back to login
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:5000/api/dashboard", {
-        headers: { Authorization: token }
-      });
-
-      const data = await response.json();
-
-      if (data.message) {
-        setMessage(data.message); // show welcome message
-      } else {
-        alert(data.error);
-        navigate("/login"); // invalid token → back to login
-      }
-
-    } catch (error) {
-      alert("Something went wrong! " + error);
-      navigate("/login");
-    }
-  };
-
-  // Run fetchDashboard when component mounts
+  // Fetch dashboard message on mount
   useEffect(() => {
-    fetchDashboard();
-  }, []);
+    if (!isAuthenticated) {
+      navigate("/login"); // no token → redirect
+    } else {
+      dispatch(fetchDashboardMessage());
+    }
+  }, [dispatch, isAuthenticated, navigate]);
 
-  // Logout function
+  // Logout handler
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(logout());
     navigate("/login");
   };
 
   return (
     <div className="container">
-        <div className="card">
-      <h2>Dashboard</h2>
-      <p>{message}</p>
-      <button onClick={handleLogout}>Logout</button>
+      <div className="card">
+        <h2>Dashboard</h2>
+
+        {/* Loading state */}
+        {loading && <p>Loading...</p>}
+
+        {/* Error state */}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {/* Welcome message */}
+        {!loading && !error && <p>{message}</p>}
+
+        <button onClick={handleLogout}>Logout</button>
       </div>
-      
     </div>
   );
 }

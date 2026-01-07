@@ -1,38 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../features/auth/authSlice"; // import thunk
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Async function for login
-  const handleLogin = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, password: password })
-      });
+  // Get auth state from Redux
+  const { token, isAuthenticated, loading, error } = useSelector(
+    (state) => state.auth
+  );
 
-      const data = await response.json();
-
-      if (data.token) {
-        localStorage.setItem("token", data.token); // save token
-        alert("Login successful!");
-        navigate("/dashboard"); // redirect to dashboard
-      } else {
-        alert(data.error);
-      }
-
-    } catch (error) {
-      alert("Something went wrong! " + error);
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
     }
+  }, [isAuthenticated, navigate]);
+
+  // Handle login button click
+  const handleLogin = () => {
+    dispatch(loginUser({ email, password })); // call thunk
   };
 
   return (
-    <div>
-      <div className="container">
+    <div className="container">
       <div className="card">
         <h2>Login</h2>
 
@@ -40,25 +36,28 @@ function Login() {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleLogin}>Login</button>
+        {/* Show loading or normal button */}
+        <button onClick={handleLogin} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        {/* Show error message */}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
         <p>
           Don’t have an account? <Link to="/register">Register</Link>
         </p>
       </div>
-    </div>
-
-
     </div>
   );
 }
