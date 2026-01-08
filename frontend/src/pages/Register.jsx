@@ -9,7 +9,7 @@ function Register() {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
+      const response = await fetch("https://luminous-spirit-production.up.railway.app/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -34,7 +34,7 @@ function Register() {
   <div className="container">
     <div className="card">
       <h2>Register</h2>
-
+  <form on onSubmit={handleRegister}>
       <input
         className="input"
         type="text"
@@ -62,6 +62,7 @@ function Register() {
       <button className="button" onClick={handleRegister}>
         Register
       </button>
+      </form>
 
       <div className="link">
         Already have an account? <Link to="/login">Login</Link>

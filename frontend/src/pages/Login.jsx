@@ -31,7 +31,7 @@ function Login() {
     <div className="container">
       <div className="card">
         <h2>Login</h2>
-
+      <form onSubmit={handleLogin}>
         <input
           type="email"
           placeholder="Email"
@@ -50,6 +50,7 @@ function Login() {
         <button onClick={handleLogin} disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
+        </form>
 
         {/* Show error message */}
         {error && <p style={{ color: "red" }}>{error}</p>}
