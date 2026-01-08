@@ -13,7 +13,9 @@ app.use(cors());
 app.use(express.json()); // for parsing JSON body
 
 // 4️⃣ JWT secret
-const JWT_SECRET = "your_jwt_secret"; // keep this secret in env variable in real apps
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET;
+ // keep this secret in env variable in real apps
 
 // ------------------ Routes ------------------
 
@@ -113,6 +115,5 @@ app.get("/api/dashboard", async (req, res) => {
 });
 
 // 9️⃣ Start server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
