@@ -6,10 +6,12 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+ 
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("https://luminous-spirit-production.up.railway.app/api/register", {
+      const API_BASE_URL =import.meta.env.VITE_API_URL;
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
