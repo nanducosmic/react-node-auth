@@ -11,7 +11,7 @@ const app = express();
 // 3️⃣ Middleware
 app.use(
   cors({
-    origin: *  })
+    origin: "*"  })
 );
 
 app.use(express.json()); // for parsing JSON body
