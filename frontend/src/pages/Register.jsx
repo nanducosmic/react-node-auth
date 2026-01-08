@@ -16,10 +16,13 @@ function Register() {
       });
 
       const data = await response.json();
+      console.log("REGISTER RESPONSE:", data);
 
       if (data.message) {
         alert(data.message);
         navigate("/login");
+        localStorage.removeItem("token");
+  localStorage.removeItem("role");
       } else {
         alert(data.error);
       }

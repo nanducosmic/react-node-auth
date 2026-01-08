@@ -11,12 +11,7 @@ const app = express();
 // 3️⃣ Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://richauth.netlify.app"
-    ],
-    credentials: true
-  })
+    origin: *  })
 );
 
 app.use(express.json()); // for parsing JSON body
