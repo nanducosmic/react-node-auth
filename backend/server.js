@@ -9,7 +9,16 @@ const jwt = require("jsonwebtoken");
 const app = express();
 
 // 3️⃣ Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://richauth.netlify.app"
+    ],
+    credentials: true
+  })
+);
+
 app.use(express.json()); // for parsing JSON body
 
 // 4️⃣ JWT secret
